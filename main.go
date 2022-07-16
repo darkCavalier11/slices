@@ -1,6 +1,8 @@
 package slices
 
-import "log"
+import (
+	"log"
+)
 
 const (
 	EMPTY_SLICE_ERROR = "The slice is empty"
@@ -60,4 +62,13 @@ func Any[T any](S []T, PredicateFunc func(T) bool) bool {
 
 func Clear[T any](S *[]T) {
 	*S = []T{}
+}
+
+func Contains[T comparable](S []T, element T) bool {
+	for i := range S {
+		if S[i] == element {
+			return true
+		}
+	}
+	return false
 }

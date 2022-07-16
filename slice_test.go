@@ -102,3 +102,15 @@ func TestSlice_Clear(t *testing.T) {
 		require.Equal(t, 0, len(s), "invalid result in clearing")
 	}
 }
+
+func TestSlice_Contains(t *testing.T) {
+	for _, s := range testSlices {
+		result := Contains(s, -1)
+		require.False(t, result)
+
+		if !IsEmpty(s) {
+			result = Contains(s, s[0])
+			require.True(t, result)
+		}
+	}
+}
