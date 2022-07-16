@@ -10,6 +10,7 @@ var testSlices = [][]int{
 	{4, 5, 6},
 	{},
 	{78, 5874854, 56, 39},
+	{4, 4, 4},
 }
 
 func TestSlice_IsEmpty(t *testing.T) {
@@ -64,7 +65,7 @@ func TestSlice_AppendAll(t *testing.T) {
 	for _, s := range testSlices {
 		for _, a := range testSlices {
 			resSlice := AppendAll(s, a)
-			require.Equal(t, len(resSlice), len(a) + len(s))
+			require.Equal(t, len(resSlice), len(a)+len(s))
 			i := 0
 			for i < len(resSlice) {
 				if i >= len(s) {
@@ -93,6 +94,28 @@ func TestSlice_Any(t *testing.T) {
 			return e > 4
 		})
 		require.Equal(t, result, isExist)
+	}
+}
+
+func TestSlice_Every(t *testing.T) {
+	for _, s := range testSlices {
+		// test for any element > 4
+		elementGreaterThan4 := 0
+		i := 0
+		for i < len(s) {
+			if s[i] > 4 {
+				elementGreaterThan4++
+			}
+			i++
+		}
+		result := Every(s, func(e int) bool {
+			return e > 4
+		})
+		if elementGreaterThan4 == len(s) {
+			require.True(t, result, "invalid result for every")
+		} else {
+			require.False(t, result, "invalid result for every")
+		}
 	}
 }
 

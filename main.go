@@ -49,7 +49,7 @@ func AppendAll[T any](S []T, Elements []T) []T {
 	return S
 }
 
-// returns true if any of the array elements pass the
+// returns true if any one of the array elements pass the
 // predicate function and returns true
 func Any[T any](S []T, PredicateFunc func(T) bool) bool {
 	for _, e := range S {
@@ -60,10 +60,24 @@ func Any[T any](S []T, PredicateFunc func(T) bool) bool {
 	return false
 }
 
+// returns true if all of the array elements pass the
+// predicate function and returns true
+func Every[T any](S []T, PredicateFunc func(T) bool) bool {
+	for _, e := range S {
+		if !PredicateFunc(e) {
+			return false
+		}
+	}
+	return true
+}
+
+// clears the entire slice
 func Clear[T any](S *[]T) {
 	*S = []T{}
 }
 
+
+// returns true if the slice contains the element
 func Contains[T comparable](S []T, element T) bool {
 	for i := range S {
 		if S[i] == element {
