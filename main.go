@@ -86,3 +86,14 @@ func Contains[T comparable](S []T, element T) bool {
 	}
 	return false
 }
+
+// returns index of first element where element satisfy the predicate function. if 
+// non of the element pass the predicate returns -1
+func FirstWhere[T any](S []T, PredicateFunc func (T) bool) int {
+	for i, e := range S {
+		if PredicateFunc(e) {
+			return i
+		}
+	}
+	return -1
+}

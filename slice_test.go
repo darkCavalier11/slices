@@ -137,3 +137,19 @@ func TestSlice_Contains(t *testing.T) {
 		}
 	}
 }
+
+func TestSlice_FirstWhere(t *testing.T) {
+	for _, s := range testSlices {
+		result := FirstWhere(s, func(x int) bool {
+			return x == 4
+		});
+		indexWhereFirst4 := -1
+		for i := range s {
+			if s[i] == 4 {
+				indexWhereFirst4 = i
+				break;
+			}
+		}
+		require.Equal(t, indexWhereFirst4, result)
+	}
+}
