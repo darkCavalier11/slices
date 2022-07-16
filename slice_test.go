@@ -95,3 +95,10 @@ func TestSlice_Any(t *testing.T) {
 		require.Equal(t, result, isExist)
 	}
 }
+
+func TestSlice_Clear(t *testing.T) {
+	for _, s := range testSlices {
+		Clear(&s)
+		require.Equal(t, 0, len(s), "invalid result in clearing")
+	}
+}

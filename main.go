@@ -57,3 +57,7 @@ func Any[T any](S []T, PredicateFunc func(T) bool) bool {
 	}
 	return false
 }
+
+func Clear[T any](S *[]T) {
+	*S = []T{}
+}
