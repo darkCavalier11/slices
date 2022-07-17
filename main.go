@@ -1,6 +1,7 @@
 package slices
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -96,4 +97,29 @@ func FirstWhere[T any](S []T, PredicateFunc func (T) bool) int {
 		}
 	}
 	return -1
+}
+
+// ForEach performs certain action on individual elements
+func ForEach[T any](S []T, Action func(T)) {
+	for _, e := range(S) {
+		Action(e)
+	}
+}
+
+// get a slice pointer that points to range of elements
+// having index i, begin ≤ i < end. required: begin < end
+func GetRange[T any](S []T, begin int, end int) *[]T {
+	if begin < 0 {
+		panic(fmt.Sprintf("begin should be >= 0, here %v", begin))
+	} else if (end > len(S)) {
+		panic(fmt.Sprintf("end should be less than length of slice: len(S): %v, end: %v", len(S), end))
+	} else if (begin >= end) {
+		panic(fmt.Sprintf("begin should be < end, here begin: %v, end: %v", begin, end))
+	} 
+	rangeSlice := []T{}
+	for begin < end {
+		rangeSlice = append(rangeSlice, S[begin])
+		begin++
+	}
+	return &rangeSlice
 }

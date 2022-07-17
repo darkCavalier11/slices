@@ -142,14 +142,53 @@ func TestSlice_FirstWhere(t *testing.T) {
 	for _, s := range testSlices {
 		result := FirstWhere(s, func(x int) bool {
 			return x == 4
-		});
+		})
 		indexWhereFirst4 := -1
 		for i := range s {
 			if s[i] == 4 {
 				indexWhereFirst4 = i
-				break;
+				break
 			}
 		}
 		require.Equal(t, indexWhereFirst4, result)
+	}
+}
+
+func TestSlice_ForEach(t *testing.T) {
+	for _, s := range testSlices {
+		var modifiedSlice = []int{}
+		ForEach(s, func(t int) {
+			modifiedSlice = append(modifiedSlice, t/2)
+		})
+		for i := range s {
+			require.Equal(t, s[i]/2, modifiedSlice[i])
+		}
+	}
+}
+
+func TestSlice_GetRange(t *testing.T) {
+	for _, s := range testSlices {
+		require.Panicsf(t, func() {
+			GetRange(s, -1, len(s))
+		}, "invalid output for begin -1")
+		require.Panicsf(t, func() {
+			GetRange(s, 0, len(s)+1)
+		}, "invalid output for end len(s) + 1")
+		require.Panicsf(t, func() {
+			GetRange(s, len(s), len(s))
+		}, "invalid output for begin == end")
+		require.Panicsf(t, func() {
+			GetRange(s, 0, 0)
+		}, "invalid output for begin == end")
+		if len(s) != 0 {
+			rangeSlice := GetRange(s, 0, len(s))
+			require.Equal(t, *rangeSlice, s, "invalid output")
+
+			rangeSlice = GetRange(s, 0, 1)
+			require.Equal(t, *rangeSlice, []int{First(s)}, "invalid output")
+
+			rangeSlice = GetRange(s, len(s)-1, len(s))
+			require.Equal(t, *rangeSlice, []int{Last(s)}, "invalid output")
+		}
 	}
 }
