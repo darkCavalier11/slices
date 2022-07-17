@@ -77,7 +77,6 @@ func Clear[T any](S *[]T) {
 	*S = []T{}
 }
 
-
 // returns true if the slice contains the element
 func Contains[T comparable](S []T, element T) bool {
 	for i := range S {
@@ -88,9 +87,9 @@ func Contains[T comparable](S []T, element T) bool {
 	return false
 }
 
-// returns index of first element where element satisfy the predicate function. if 
+// returns index where element satisfy the predicate function. if
 // non of the element pass the predicate returns -1
-func FirstWhere[T any](S []T, PredicateFunc func (T) bool) int {
+func IndexWhere[T any](S []T, PredicateFunc func(T) bool) int {
 	for i, e := range S {
 		if PredicateFunc(e) {
 			return i
@@ -101,7 +100,7 @@ func FirstWhere[T any](S []T, PredicateFunc func (T) bool) int {
 
 // ForEach performs certain action on individual elements
 func ForEach[T any](S []T, Action func(T)) {
-	for _, e := range(S) {
+	for _, e := range S {
 		Action(e)
 	}
 }
@@ -111,15 +110,37 @@ func ForEach[T any](S []T, Action func(T)) {
 func GetRange[T any](S []T, begin int, end int) *[]T {
 	if begin < 0 {
 		panic(fmt.Sprintf("begin should be >= 0, here %v", begin))
-	} else if (end > len(S)) {
+	} else if end > len(S) {
 		panic(fmt.Sprintf("end should be less than length of slice: len(S): %v, end: %v", len(S), end))
-	} else if (begin >= end) {
+	} else if begin >= end {
 		panic(fmt.Sprintf("begin should be < end, here begin: %v, end: %v", begin, end))
-	} 
+	}
 	rangeSlice := []T{}
 	for begin < end {
 		rangeSlice = append(rangeSlice, S[begin])
 		begin++
 	}
 	return &rangeSlice
+}
+
+// Insert an element at particular index. If the index > len(s)
+// it will panic
+func Insert[T any](S *[]T, index int, element T) {
+	if index > len(*S) || index < 0 {
+		panic(fmt.Sprintf("invalid index to insert, len(S): %v, index: %v", len(*S), index))
+	}
+	if index == len(*S) {
+		(*S) = append((*S), element)
+		return
+	}
+	nextElement := (*S)[index]
+	(*S)[index] = element
+	index++
+	for index < len(*S) {
+		temp := (*S)[index]
+		(*S)[index] = nextElement
+		nextElement = temp
+		index++
+	}
+	*S = append(*S, nextElement)
 }

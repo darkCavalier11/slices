@@ -140,7 +140,7 @@ func TestSlice_Contains(t *testing.T) {
 
 func TestSlice_FirstWhere(t *testing.T) {
 	for _, s := range testSlices {
-		result := FirstWhere(s, func(x int) bool {
+		result := IndexWhere(s, func(x int) bool {
 			return x == 4
 		})
 		indexWhereFirst4 := -1
@@ -189,6 +189,26 @@ func TestSlice_GetRange(t *testing.T) {
 
 			rangeSlice = GetRange(s, len(s)-1, len(s))
 			require.Equal(t, *rangeSlice, []int{Last(s)}, "invalid output")
+		}
+	}
+}
+
+func TestSlice_Insert(t *testing.T) {
+	for _, s := range testSlices {
+		require.Panicsf(t, func() {
+			Insert(&s, -1, 0)
+		}, "invalid output, should have panicked")
+		require.Panicsf(t, func() {
+			Insert(&s, len(s)+1, 0)
+		}, "invalid output, should have panicked")
+		Insert(&s, len(s), 11)
+		require.Equal(t, Last(s), 11, "invalid output")
+		Insert(&s, 0, 21)
+		require.Equal(t, First(s), 21, "invalid output")
+
+		if len(s) >= 3 {
+			Insert(&s, 2, 11)
+			require.Equal(t, s[2], 11)
 		}
 	}
 }
