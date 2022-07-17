@@ -98,6 +98,19 @@ func IndexWhere[T any](S []T, PredicateFunc func(T) bool) int {
 	return -1
 }
 
+// returns index from behind where element satisfy the predicate function. if
+// non of the element pass the predicate returns -1
+func LastIndexWhere[T any](S []T, PredicateFunc func(T) bool) int {
+	i := len(S)-1
+	for i >= 0 {
+		if PredicateFunc(S[i]) {
+			return i
+		}
+		i--
+	}
+	return -1
+}
+
 // ForEach performs certain action on individual elements
 func ForEach[T any](S []T, Action func(T)) {
 	for _, e := range S {
@@ -144,3 +157,5 @@ func Insert[T any](S *[]T, index int, element T) {
 	}
 	*S = append(*S, nextElement)
 }
+
+

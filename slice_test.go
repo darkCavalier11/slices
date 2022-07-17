@@ -138,7 +138,7 @@ func TestSlice_Contains(t *testing.T) {
 	}
 }
 
-func TestSlice_FirstWhere(t *testing.T) {
+func TestSlice_IndexWhere(t *testing.T) {
 	for _, s := range testSlices {
 		result := IndexWhere(s, func(x int) bool {
 			return x == 4
@@ -151,6 +151,24 @@ func TestSlice_FirstWhere(t *testing.T) {
 			}
 		}
 		require.Equal(t, indexWhereFirst4, result)
+	}
+}
+
+func TestSlice_LastIndexWhere(t *testing.T) {
+	for _, s := range testSlices {
+		result := LastIndexWhere(s, func(x int) bool {
+			return x == 4
+		})
+		indexWhereLast4 := -1
+		i := len(s) - 1
+		for i >= 0 {
+			if s[i] == 4 {
+				indexWhereLast4 = i
+				break
+			}
+			i--
+		}
+		require.Equal(t, indexWhereLast4, result)
 	}
 }
 
