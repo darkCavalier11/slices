@@ -1,6 +1,8 @@
 package slices
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -227,6 +229,17 @@ func TestSlice_Insert(t *testing.T) {
 		if len(s) >= 3 {
 			Insert(&s, 2, 11)
 			require.Equal(t, s[2], 11)
+		}
+	}
+}
+
+func TestSlice_Map(t *testing.T) {
+	for _, s := range testSlices {
+		prettySlice := Map(s, func(element int) string {
+			return "(" + strconv.FormatInt(int64(element), 10) + ")"
+		})
+		for i := range s {
+			require.Equal(t, (*prettySlice)[i], "(" + strconv.FormatInt(int64(s[i]), 10) + ")", fmt.Sprintf("error mapping %v", s))
 		}
 	}
 }

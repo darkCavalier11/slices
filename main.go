@@ -158,4 +158,10 @@ func Insert[T any](S *[]T, index int, element T) {
 	*S = append(*S, nextElement)
 }
 
-
+func Map[T, R any](S []T, MappingFunc func(element T) R) *[]R {
+	mappedSlice := []R{}
+	for i := range S {
+		mappedSlice = append(mappedSlice, MappingFunc(S[i]))
+	}
+	return &mappedSlice
+}
