@@ -98,6 +98,16 @@ func IndexWhere[T any](S []T, PredicateFunc func(T) bool) int {
 	return -1
 }
 
+// returns the index of element. If the element is absent, it returns -1.
+func IndexOf[T comparable](S []T, element T) int {
+	for i := range S {
+		if S[i] == element {
+			return i
+		}
+	}
+	return -1
+}
+
 // returns index from behind where element satisfy the predicate function. if
 // non of the element pass the predicate returns -1
 func LastIndexWhere[T any](S []T, PredicateFunc func(T) bool) int {
@@ -158,10 +168,27 @@ func Insert[T any](S *[]T, index int, element T) {
 	*S = append(*S, nextElement)
 }
 
+// A mappping function that converts a slice of element type  T to
+// another slice of element type R with the MappingFunc
+// (element T) -----> MappingFunc ------> (element R)
 func Map[T, R any](S []T, MappingFunc func(element T) R) *[]R {
 	mappedSlice := []R{}
 	for i := range S {
 		mappedSlice = append(mappedSlice, MappingFunc(S[i]))
 	}
 	return &mappedSlice
+}
+
+// removes the first element that equal to given element from the slice.
+func Remove[T comparable](S *[]T, element T) {
+	indexOfElement := IndexWhere(*S, func(e T) bool {
+		return e == element
+	})
+	if indexOfElement != -1 {
+		if indexOfElement == len(*S) - 1 {
+			Pop(S)
+			return
+		}
+		*S = append((*S)[:indexOfElement], (*S)[indexOfElement + 1:]...)
+	}
 }

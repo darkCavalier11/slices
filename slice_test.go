@@ -156,6 +156,20 @@ func TestSlice_IndexWhere(t *testing.T) {
 	}
 }
 
+func TestSlice_IndexOf(t *testing.T) {
+	for _, s := range testSlices {
+		if len(s) > 0 {
+			require.Equal(t,
+				IndexWhere(s, func(e int) bool {
+					return e == 4
+				},
+				),
+				IndexOf(s, 4),
+			)
+		}
+	}
+}
+
 func TestSlice_LastIndexWhere(t *testing.T) {
 	for _, s := range testSlices {
 		result := LastIndexWhere(s, func(x int) bool {
@@ -239,7 +253,13 @@ func TestSlice_Map(t *testing.T) {
 			return "(" + strconv.FormatInt(int64(element), 10) + ")"
 		})
 		for i := range s {
-			require.Equal(t, (*prettySlice)[i], "(" + strconv.FormatInt(int64(s[i]), 10) + ")", fmt.Sprintf("error mapping %v", s))
+			require.Equal(t, (*prettySlice)[i], "("+strconv.FormatInt(int64(s[i]), 10)+")", fmt.Sprintf("error mapping %v", s))
 		}
+	}
+}
+
+func TestSlice_Remove(t *testing.T) {
+	for _, s := range testSlices {
+		Remove(&s, 4)
 	}
 }
