@@ -13,6 +13,8 @@ var testSlices = [][]int{
 	{},
 	{78, 5874854, 56, 39},
 	{4, 4, 4},
+	{7,8,9,4},
+	{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},
 }
 
 func TestSlice_IsEmpty(t *testing.T) {
@@ -208,12 +210,12 @@ func TestSlice_GetRange(t *testing.T) {
 		require.Panicsf(t, func() {
 			GetRange(s, 0, len(s)+1)
 		}, "invalid output for end len(s) + 1")
-		require.Panicsf(t, func() {
-			GetRange(s, len(s), len(s))
-		}, "invalid output for begin == end")
-		require.Panicsf(t, func() {
-			GetRange(s, 0, 0)
-		}, "invalid output for begin == end")
+		if len(s) > 0 {
+
+			require.Panicsf(t, func() {
+				GetRange(s, len(s), 0)
+			}, "invalid output for end len(s) + 1")
+		}
 		if len(s) != 0 {
 			rangeSlice := GetRange(s, 0, len(s))
 			require.Equal(t, *rangeSlice, s, "invalid output")
@@ -260,6 +262,18 @@ func TestSlice_Map(t *testing.T) {
 
 func TestSlice_Remove(t *testing.T) {
 	for _, s := range testSlices {
+		initialLength := len(s)
+		i := IndexOf(s, 4)
+		if i == -1 {
+			continue
+		}
+		
+		nextElements := GetRange(s, i+1, len(s))
 		Remove(&s, 4)
+
+		require.Equal(t, len(s), initialLength - 1)
+		for j := range *nextElements {
+			require.Equal(t, (*nextElements)[j], s[i+j])
+		}
 	}
 }

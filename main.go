@@ -129,16 +129,19 @@ func ForEach[T any](S []T, Action func(T)) {
 }
 
 // get a slice pointer that points to range of elements
-// having index i, begin ≤ i < end. required: begin < end
+// having index i, begin ≤ i < end. required: begin <= end
 func GetRange[T any](S []T, begin int, end int) *[]T {
 	if begin < 0 {
 		panic(fmt.Sprintf("begin should be >= 0, here %v", begin))
 	} else if end > len(S) {
 		panic(fmt.Sprintf("end should be less than length of slice: len(S): %v, end: %v", len(S), end))
-	} else if begin >= end {
+	} else if begin > end {
 		panic(fmt.Sprintf("begin should be < end, here begin: %v, end: %v", begin, end))
 	}
 	rangeSlice := []T{}
+	if begin == end {
+		return &rangeSlice
+	}
 	for begin < end {
 		rangeSlice = append(rangeSlice, S[begin])
 		begin++
@@ -181,9 +184,7 @@ func Map[T, R any](S []T, MappingFunc func(element T) R) *[]R {
 
 // removes the first element that equal to given element from the slice.
 func Remove[T comparable](S *[]T, element T) {
-	indexOfElement := IndexWhere(*S, func(e T) bool {
-		return e == element
-	})
+	indexOfElement := IndexOf(*S, element)
 	if indexOfElement != -1 {
 		if indexOfElement == len(*S) - 1 {
 			Pop(S)
