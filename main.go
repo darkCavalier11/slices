@@ -220,3 +220,25 @@ func RemoveWhere[T comparable](S *[]T, PredicateFunc func(element T) bool) {
 		}
 	}
 }
+
+// returns a slice pointer where each element satify predicate func
+func Where[T comparable](S []T, PredicateFunc func(element T) bool) *[]T{
+	requiredSlice := []T{}
+	for i := range S {
+		if PredicateFunc(S[i]) {
+			requiredSlice = append(requiredSlice, S[i])
+		}
+	}
+	return &requiredSlice
+}
+
+// returns no of element have Predicate func evaluate to true
+func Count[T comparable](S []T, PredicateFunc func(element T) bool) int {
+	count := 0
+	for i := range S {
+		if PredicateFunc(S[i]) {
+			count++
+		}
+	}
+	return count
+}

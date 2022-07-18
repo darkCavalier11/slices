@@ -13,8 +13,8 @@ var testSlices = [][]int{
 	{},
 	{78, 5874854, 56, 39},
 	{4, 4, 4},
-	{7,8,9,4},
-	{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},
+	{7, 8, 9, 4},
+	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
 }
 
 func TestSlice_IsEmpty(t *testing.T) {
@@ -267,11 +267,11 @@ func TestSlice_Remove(t *testing.T) {
 		if i == -1 {
 			continue
 		}
-		
+
 		nextElements := GetRange(s, i+1, len(s))
 		Remove(&s, 4)
 
-		require.Equal(t, len(s), initialLength - 1)
+		require.Equal(t, len(s), initialLength-1)
 		for j := range *nextElements {
 			require.Equal(t, (*nextElements)[j], s[i+j])
 		}
@@ -301,14 +301,14 @@ func TestSlice_RemoveAt(t *testing.T) {
 			l := len(s)
 			var e int
 			if len(s) > 1 {
-				e = s[len(s) - 2]
+				e = s[len(s)-2]
 			}
-			RemoveAt(&s, len(s) - 1)
+			RemoveAt(&s, len(s)-1)
 			require.Equal(t, len(s), l-1)
 			if len(s) > 0 {
 				require.Equal(t, e, s[len(s)-1])
 			}
-		} 
+		}
 		if len(s) > 4 {
 			l := len(s)
 			nextElement := s[3]
@@ -321,12 +321,63 @@ func TestSlice_RemoveAt(t *testing.T) {
 
 func TestSlice_RemoveWhere(t *testing.T) {
 	for _, s := range testSlices {
-		fmt.Println(s)
-
 		RemoveWhere(&s, func(e int) bool {
 			return e == 4
 		})
 		fmt.Println(s)
 		require.Equal(t, -1, IndexOf(s, 4))
+	}
+}
+
+func TestSlice_Where(t *testing.T) {
+	for _, s := range testSlices {
+		// all element = 4
+		expected := 0
+		for i := range s {
+			if s[i] == 4 {
+				expected++
+			}
+		}
+		result := Where(s, func(e int) bool {return e == 4})
+		require.Equal(t, expected, len(*result))
+		for j := range *result {
+			require.Equal(t, (*result)[j], 4, "invalid output")
+		}
+
+		// element > 2
+		expected = 0
+		for i := range s {
+			if s[i] > 2 {
+				expected++
+			}
+		}
+		result = Where(s, func(e int) bool {return e > 2})
+		require.Equal(t, expected, len(*result))
+		for j := range *result {
+			require.Greater(t, (*result)[j],2, "invalid output")
+		}
+	}
+}
+
+func TestSlice_Count(t *testing.T) {
+	for _, s := range testSlices {
+		// all element = 4
+		expected := 0
+		for i := range s {
+			if s[i] == 4 {
+				expected++
+			}
+		}
+		result := Count(s, func(e int) bool {return e == 4})
+		require.Equal(t, expected, result)
+		// element > 2
+		expected = 0
+		for i := range s {
+			if s[i] > 2 {
+				expected++
+			}
+		}
+		result = Count(s, func(e int) bool {return e > 2})
+		require.Equal(t, expected, result)
 	}
 }
