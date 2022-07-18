@@ -277,3 +277,56 @@ func TestSlice_Remove(t *testing.T) {
 		}
 	}
 }
+
+func TestSlice_RemoveAt(t *testing.T) {
+	for _, s := range testSlices {
+		require.Panicsf(t, func() {
+			RemoveAt(&s, -1)
+			RemoveAt(&s, len(s))
+			RemoveAt(&s, len(s)+5)
+		}, fmt.Sprintf("invalid output for %v", s))
+		if len(s) > 0 {
+			l := len(s)
+			var e int
+			if len(s) > 1 {
+				e = s[1]
+			}
+			RemoveAt(&s, 0)
+			require.Equal(t, len(s), l-1)
+			if len(s) > 0 {
+				require.Equal(t, e, s[0])
+			}
+		}
+		if len(s) > 0 {
+			l := len(s)
+			var e int
+			if len(s) > 1 {
+				e = s[len(s) - 2]
+			}
+			RemoveAt(&s, len(s) - 1)
+			require.Equal(t, len(s), l-1)
+			if len(s) > 0 {
+				require.Equal(t, e, s[len(s)-1])
+			}
+		} 
+		if len(s) > 4 {
+			l := len(s)
+			nextElement := s[3]
+			RemoveAt(&s, 2)
+			require.Equal(t, len(s), l-1)
+			require.Equal(t, s[2], nextElement, "inavlid element")
+		}
+	}
+}
+
+func TestSlice_RemoveWhere(t *testing.T) {
+	for _, s := range testSlices {
+		fmt.Println(s)
+
+		RemoveWhere(&s, func(e int) bool {
+			return e == 4
+		})
+		fmt.Println(s)
+		require.Equal(t, -1, IndexOf(s, 4))
+	}
+}

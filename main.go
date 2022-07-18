@@ -2,7 +2,6 @@ package slices
 
 import (
 	"fmt"
-	"log"
 )
 
 const (
@@ -38,7 +37,6 @@ func Pop[T any](S *[]T) T {
 	lastElement := Last(*S)
 	newSlice := (*S)[:len(*S)-1]
 	*S = newSlice
-	log.Println(S)
 	return lastElement
 }
 
@@ -111,7 +109,7 @@ func IndexOf[T comparable](S []T, element T) int {
 // returns index from behind where element satisfy the predicate function. if
 // non of the element pass the predicate returns -1
 func LastIndexWhere[T any](S []T, PredicateFunc func(T) bool) int {
-	i := len(S)-1
+	i := len(S) - 1
 	for i >= 0 {
 		if PredicateFunc(S[i]) {
 			return i
@@ -186,10 +184,39 @@ func Map[T, R any](S []T, MappingFunc func(element T) R) *[]R {
 func Remove[T comparable](S *[]T, element T) {
 	indexOfElement := IndexOf(*S, element)
 	if indexOfElement != -1 {
-		if indexOfElement == len(*S) - 1 {
+		if indexOfElement == len(*S)-1 {
 			Pop(S)
 			return
 		}
-		*S = append((*S)[:indexOfElement], (*S)[indexOfElement + 1:]...)
+		*S = append((*S)[:indexOfElement], (*S)[indexOfElement+1:]...)
+	}
+}
+
+// Removes an element at particular index
+func RemoveAt[T comparable](S *[]T, index int) {
+	if index >= len(*S) || index < 0 {
+		panic(fmt.Sprintf("invalid index %v", index))
+	}
+	if index == len(*S)-1 {
+		Pop(S)
+		return
+	}
+	*S = append((*S)[:index], (*S)[index+1:]...)
+}
+
+// Removes the all element where predicate function evaluates to true
+func RemoveWhere[T comparable](S *[]T, PredicateFunc func(element T) bool) {
+	i := 0
+	for i < len(*S) {
+		if PredicateFunc((*S)[i]) {
+			if i != len(*S)-1 {
+				*S = append((*S)[:i], (*S)[i+1:]...)
+			} else {
+				Pop(S)
+				break
+			}
+		} else {
+			i++
+		}
 	}
 }
